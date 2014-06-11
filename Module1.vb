@@ -94,11 +94,13 @@ Module Module1
                 'Check for Detect that contains a filepath instead of a registry path
                 If command.StartsWith("Detect=%") Or command.StartsWith("Detect=C:\") Then
                     Console.WriteLine("Line: " & linecount & " Error: 'Detect' can only be used for registry key paths." & Environment.NewLine & "Command: " & command & Environment.NewLine)
+                    number_of_errors = number_of_errors + 1
                 End If
 
                 'Check for detectfile that contains a registry path
                 If command.StartsWith("DetectFile=HKLM") Or command.StartsWith("DetectFile=HKCU") Or command.StartsWith("DetectFile=HKC") Or command.StartsWith("DetectFile=HKCR") Then
                     Console.WriteLine("Line: " & linecount & " Error: 'DetectFile' can only be used for filesystem paths." & Environment.NewLine & "Command: " & command & Environment.NewLine)
+                    number_of_errors = number_of_errors + 1
                 End If
 
                 'Check for missing backslashes on environmental variables
@@ -113,12 +115,16 @@ Module Module1
 
 
             Loop
+
+            'Close unmanaged code calls
+            r.Close()
+
+
                 Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
 
-        'Close unmanaged code calls
-        r.Close()
+
 
         'Stop the program from closing on completion
         Console.WriteLine("***********************************************" & Environment.NewLine & "Completed analysis of winapp2.ini. " & number_of_errors & " errors were detected. Press any key to close.")
